@@ -39,13 +39,12 @@ metadata:
   labels:
     app: vote
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: vote
   ports:
     - port: 8080
       targetPort: 80
-      nodePort: 31000
       name: vote-service
 
 ---
@@ -56,12 +55,11 @@ metadata:
   labels:
     app: result
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: result
   ports:
     - port: 8090
       targetPort: 80
-      nodePort: 31001
       name: result-service
 
