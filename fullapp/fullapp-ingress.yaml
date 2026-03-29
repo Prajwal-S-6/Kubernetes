@@ -6,7 +6,8 @@ metadata:
     app: ingress
 spec:
   rules:
-    - http:
+    - host: ""
+      http:
         paths:
         - path: /vote
           pathType: Prefix
