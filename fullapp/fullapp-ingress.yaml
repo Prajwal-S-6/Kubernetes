@@ -4,6 +4,8 @@ metadata:
   name: fullapp-ingress
   labels:
     app: ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
 spec:
   rules:
     - host: ""
