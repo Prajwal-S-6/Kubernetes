@@ -15,11 +15,11 @@ spec:
             service:
               name: vote
               port:
-                number: 80
+                number: 8080
         - path: /result
           pathType: Prefix
           backend:
             service:
               name: result
               port:
-                number: 80
+                number: 8090

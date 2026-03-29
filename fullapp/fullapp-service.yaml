@@ -43,7 +43,7 @@ spec:
   selector:
     app: vote
   ports:
-    - port: 80
+    - port: 8080
       targetPort: 80
       name: vote-service
 
@@ -59,7 +59,7 @@ spec:
   selector:
     app: result
   ports:
-    - port: 80
+    - port: 8090
       targetPort: 80
       name: result-service
 
