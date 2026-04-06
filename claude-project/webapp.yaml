@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+    tier: frontend
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: webapp
+      tier: frontend
+
+  template:
+    metadata:
+      name: webapp-pod
+      labels:
+        app: webapp
+        tier: frontend
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+#         envFrom:
+#            - configMapRef:
+#                name: webapp-config
+#            - secretRef:
+#                name: webapp-secret
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_ENV
+                  name: webapp-config
+            - name: db_pass
+              valueFrom:
+                secretKeyRef:
+                  key: db-pass
+                  name: webapp-secret
