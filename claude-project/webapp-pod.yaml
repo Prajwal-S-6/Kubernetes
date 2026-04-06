@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - mountPath: /var/log/nginx
+          name: log
+      readinessProbe:
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        httpGet:
+          port: 80
+          path: /ready
+      livenessProbe:
+        initialDelaySeconds: 10
+        failureThreshold: 3
+        periodSeconds: 5
+        httpGet:
+          port: 80
+          path: /
+  initContainers:
+    - name: shipper
+      image: busybox
+      restartPolicy: Always
+      volumeMounts:
+        - mountPath: /var/log/nginx
+          name: log
+      command:
+        - "tail"
+        - "-f"
+        - "/var/log/nginx/access.log"
+  volumes:
+    - name: log
+      emptyDir: {}
+#     hostPath:         # the logs are mounted onto host machine under /log
+#       path: /log      # the volume stays even if pod dies and if pod is created on same node then will be mounted on to same volume
