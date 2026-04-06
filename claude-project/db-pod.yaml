@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db
+spec:
+  containers:
+    - name: postgres
+      image: postgres:15
+      securityContext:
+        runAsUser: 1000
+        allowPrivilegeEscalation: false
+      volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-data
+  volumes:
+    - name: postgres-data
+      persistentVolumeClaim:
+        claimName: db-pvc
