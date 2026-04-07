@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: reader
+spec:
+  containers:
+    - name: reader
+      image: busybox
+      volumeMounts:
+        - mountPath: /data
+          name: shared-data
+      args:
+        - while true; do
+            cat /data/out.txt
+            sleep 5
+          done
+  volumes:
+    - name: shared-data
+      persistentVolumeClaim:
+        claimName: shared-pvc
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: writer
+spec:
+  containers:
+    - name: writer
+      image: busybox
+      volumeMounts:
+        - mountPath: /data
+          name: shared-data
+      args:
+        - echo hello > /data/out.txt
+        - sleep
+  volumes:
+    - name: shared-data
+      persistentVolumeClaim:
+        claimName: shared-pvc
