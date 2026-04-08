@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cleanup
+spec:
+  jobTemplate:
+    metadata:
+      name: busybox
+    spec:
+      template:
+        spec:
+          containers:
+            - name: busybox
+              image: busybox
+              restartPolicy: Never
+              command:
+                - find /tmp -mtime +7 -delete
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  schedule: "0 0 * * *"
