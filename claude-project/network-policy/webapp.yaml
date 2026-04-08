@@ -1,0 +1,35 @@
+# No ingress rules in spec + Ingress in policyTypes  => block ALL incoming
+# No egress rules in spec  + Egress in policyTypes   => block ALL outgoing
+# No Egress/Ingress in policyType then will infer based on spec
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: database-ns
+spec:
+  policyTypes:
+    - Ingress
+  podSelector:
+    matchLabels:
+      app: database
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: backend
+---
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-ns
+spec:
+  policyTypes:
+    - Ingress
+  podSelector:
+    matchLabels:
+      app: backend
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
