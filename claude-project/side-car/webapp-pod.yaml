@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      volumeMounts:
+        - mountPath: /init
+          name: init-vol
+    - name: log-sidecar
+      image: busybox
+      volumeMounts:
+        - mountPath: /init
+          name: init-vol
+      restartPolicy: Always
+      args:
+        - tail -f /init/log.txt
+  initContainers:
+    - name: init-writer
+      image: busybox
+      args:
+        - echo App started > /init/log.txt
+      volumeMounts:
+        - mountPath: /init
+          name: init-vol
+  volumes:
+    - name: init-vol
+      emptyDir: {}
