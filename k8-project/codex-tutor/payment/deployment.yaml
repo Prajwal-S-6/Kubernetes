@@ -1,20 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: payment-api
+  name: payment-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: payment
+      app: payment-api
   template:
     metadata:
       labels:
-        app: payment
+        app: payment-api
     spec:
       containers:
         - name: payment-api
           image: mycorp/payment-api:2.4.1
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
           ports:
             - containerPort: 8080
               name: container-port
@@ -37,4 +40,9 @@ spec:
               port: 80
               path: /live
             terminationGracePeriodSeconds: 30
+          envFrom:
+            - secretRef:
+                name: payment-secret
+            - configMapRef:
+                name: payment-config
 
