@@ -12,6 +12,7 @@ spec:
       labels:
         app: payment-api
     spec:
+      terminationGracePeriodSeconds: 30
       containers:
         - name: payment-api
           image: mycorp/payment-api:2.4.1
@@ -31,18 +32,26 @@ spec:
           readinessProbe:
             initialDelaySeconds: 5
             httpGet:
-              port: 80
+              port: 8080
               path: /ready
-            terminationGracePeriodSeconds: 30
           livenessProbe:
             initialDelaySeconds: 10
             httpGet:
-              port: 80
+              port: 8080
               path: /live
-            terminationGracePeriodSeconds: 30
-          envFrom:
-            - secretRef:
-                name: payment-secret
-            - configMapRef:
-                name: payment-config
-
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_ENV
+                  name: payment-config
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  key: LOG_LEVEL
+                  name: payment-config
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: payment-secret
