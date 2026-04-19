@@ -11,6 +11,8 @@ spec:
       operator: Equal
       value: gpu
       effect: NoSchedule
+  nodeSelector:
+
   affinity:
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:

@@ -40,3 +40,5 @@ subjects:
   - kind: ServiceAccount
     name: cicd-sa
     namespace: staging
+  - kind: User
+    name: prajwal
