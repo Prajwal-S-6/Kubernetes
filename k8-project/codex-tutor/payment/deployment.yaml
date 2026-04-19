@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+        - name: payment-api
+          image: mycorp/payment-api:2.4.1
+          ports:
+            - containerPort: 8080
+              name: container-port
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              port: 80
+              path: /ready
+            terminationGracePeriodSeconds: 30
+          livenessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              port: 80
+              path: /live
+            terminationGracePeriodSeconds: 30
+
