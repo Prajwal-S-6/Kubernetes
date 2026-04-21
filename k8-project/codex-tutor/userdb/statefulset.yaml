@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+spec:
+  replicas: 3
+  serviceName: db-headless
+  selector:
+    matchLabels:
+      app: users-db
+  template:
+    metadata:
+      labels:
+        app: users-db
+    spec:
+      containers:
+        - name: users-db
+          image: mycorp/user-db:1.8.0
+          ports:
+            - containerPort: 5432
+              name: dbport
+          env:
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DB_NAME
+                  name: db-config
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: db-secret
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 1
+              memory: 2Gi
+          readinessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              port: 8080
+              path: /ready
+            periodSeconds: 10
+            failureThreshold: 10
+          livenessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              port: 8080
+              path: /live
+            periodSeconds: 10
+            failureThreshold: 10
+          volumeMounts:
+            - mountPath: /db/data
+              name: db-data
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+  volumeClaimTemplates:
+    - metadata:
+        name: db-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+
+
