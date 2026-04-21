@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-deployment
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: orders-web
+  template:
+    metadata:
+      labels:
+        app: orders-web
+    spec:
+      terminationGracePeriodSeconds: 20
+      containers:
+        - name: frontend
+          image: mycorp/orders-web:3.1.0
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            privileged: false
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              port: 3000
+              path: /ready
+            periodSeconds: 15
+            failureThreshold: 10
+          livenessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              port: 3000
+              path: /live
+            periodSeconds: 15
+            failureThreshold: 10
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 400m
+              memory: 512Mi
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: NODE_ENV
+                  name: order-config
+            - name: API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: API_BASE_URL
+                  name: order-config
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: SESSION_SECRET
+                  name: order-secret
+
+
+
+
