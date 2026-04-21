@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reports-deployment
+  namespace: analytics
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: reports-api
+  template:
+    metadata:
+      labels:
+        app: reports-api
+    spec:
+      serviceAccountName: reports-sa
+      containers:
+        - name: reports-api
+          image: mycorp/reports-api:1.2.0
+          ports:
+            - containerPort: 8080
+              name: reports
+          livenessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              port: 8080
+              path: /live
+            periodSeconds: 5
+            failureThreshold: 10
+          readinessProbe:
+            initialDelaySeconds: 10
+            httpGet:
+              port: 8080
+              path: /ready
+            periodSeconds: 5
+            failureThreshold: 10
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+          env:
+            - name: APP_MODE
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_MODE
+                  name: reports-config
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: API_TOKEN
+                  name: reports-secret
+
