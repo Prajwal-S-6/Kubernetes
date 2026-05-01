@@ -11,7 +11,7 @@ spec:
   scaleTargetRef:
     kind: Deployment
     name: orders-api
-    apiVersion: autoscaling/v2
+    apiVersion: apps/v1
   behavior:
     scaleUp:
       stabilizationWindowSeconds: 0
