@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-redis
+  namespace: ecommerce-dev
+  labels:
+    env: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-redis
+      tier: cache
+      env: dev
+  template:
+    metadata:
+      labels:
+        app: orders-redis
+        tier: cache
+        env: dev
+    spec:
+      containers:
+        - name: orders-redis
+          image: redis:7
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
