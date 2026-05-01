@@ -12,3 +12,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: orders-api-sa
+    namespace: ecommerce-dev

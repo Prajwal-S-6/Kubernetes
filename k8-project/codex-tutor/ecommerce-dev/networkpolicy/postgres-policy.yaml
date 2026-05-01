@@ -4,7 +4,7 @@ metadata:
   name: postgres-np
   namespace: ecommerce-dev
   labels:
-    dev: env
+    env: dev
 spec:
   policyTypes:
     - Ingress
