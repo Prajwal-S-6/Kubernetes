@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: orders-np
+  labels:
+    env: dev
+  namespace: ecommerce-dev
+spec:
+  policyTypes:
+    - Ingress
+  podSelector:
+    matchLabels:
+      app: orders-api
+      tier: backend
+      env: dev
+  ingress:
+    - ports:
+        - port: 8080
+          protocol: TCP
+      from:
+        - podSelector:
+            matchLabels:
+              app: orders-web

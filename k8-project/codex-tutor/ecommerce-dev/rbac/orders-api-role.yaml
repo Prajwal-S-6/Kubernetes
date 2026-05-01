@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: orders-api-config-reader
+  namespace: ecommerce-dev
+  labels:
+    env: dev
+rules:
+  - verbs:
+      - get
+    resources:
+      - configmaps
+    apiGroups:
+      - ""

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-np
+  namespace: ecommerce-dev
+  labels:
+    dev: env
+spec:
+  policyTypes:
+    - Ingress
+  podSelector:
+    matchLabels:
+      app: postgres
+  ingress:
+    - ports:
+        - port: 5432
+          protocol: TCP
+      from:
+        - podSelector:
+            matchLabels:
+              app: orders-api

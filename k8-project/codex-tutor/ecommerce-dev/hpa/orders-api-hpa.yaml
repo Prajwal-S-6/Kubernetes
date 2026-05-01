@@ -1,0 +1,15 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: orders-api-hpa
+  namespace: ecommerce-dev
+  labels:
+    env: dev
+spec:
+  maxReplicas: 5
+  minReplicas: 2
+  targetCPUUtilizationPercentage: 70
+  scaleTargetRef:
+    kind: Deployment
+    name: orders-api
+    apiVersion: autoscaling/v2
