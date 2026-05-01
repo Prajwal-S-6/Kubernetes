@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orders-web-config
+  labels:
+    env: dev
+  namespace: ecommerce-dev
+data:
+  NODE_ENV: development
+  API_BASE_URL: http://orders-api-service
