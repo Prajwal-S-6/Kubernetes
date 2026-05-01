@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orders-api-config
+  labels:
+    env: dev
+  namespace: ecommerce-dev
+data:
+  APP_ENV: dev
+  LOG_LEVEL: info
+  DB_HOST: orders-db
+  REDIS_HOST: orders-redis

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-api-service
+  namespace: ecommerce-dev
+  labels:
+    env: dev
+spec:
+  type: ClusterIP
+  selector:
+    app: orders-api
+    tier: backend
+  ports:
+    - port: 80
+      targetPort: orders-port
