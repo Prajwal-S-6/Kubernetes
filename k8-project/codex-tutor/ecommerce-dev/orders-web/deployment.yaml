@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-web
+  namespace: ecommerce-dev
+  labels:
+    env: dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: orders-web
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: orders-web
+        tier: frontend
+    spec:
+      containers:
+        - name: orders-web
+          image: mycorp/orders-web:1.0.0
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: orders-web-config
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 10
+            httpGet:
+              port: 3000
+              path: /ready
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 10
+            httpGet:
+              port: 3000
+              path: /live
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi
+          securityContext:
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+      terminationGracePeriodSeconds: 30
+
+
+
+
