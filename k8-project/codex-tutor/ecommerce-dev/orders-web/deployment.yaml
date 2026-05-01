@@ -11,11 +11,13 @@ spec:
     matchLabels:
       app: orders-web
       tier: frontend
+      env: dev
   template:
     metadata:
       labels:
         app: orders-web
         tier: frontend
+        env: dev
     spec:
       containers:
         - name: orders-web
@@ -49,7 +51,7 @@ spec:
           securityContext:
             runAsNonRoot: true
             allowPrivilegeEscalation: false
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 20
 
 
 

@@ -11,11 +11,13 @@ spec:
     matchLabels:
       app: orders-api
       tier: backend
+      env: dev
   template:
     metadata:
       labels:
         app: orders-api
         tier: backend
+        env: dev
     spec:
       containers:
         - name: orders-api

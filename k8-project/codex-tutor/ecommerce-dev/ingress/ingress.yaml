@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ecommerce-ingress
+  namespace: ecommerce-dev
+  labels:
+    env: dev
+spec:
+  rules:
+    - host: orders.local
+      http:
+        paths:
+          - backend:
+              service:
+                name: orders-api-service
+                port:
+                  number: 80
+            path: /api
+            pathType: Prefix
+          - backend:
+              service:
+                name: orders-web-service
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+
