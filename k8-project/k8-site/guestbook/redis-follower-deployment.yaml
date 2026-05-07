@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-follower
+  labels:
+    app: redis
+    role: follower
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: redis
+      role: follower
+      tier: cache
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: follower
+        tier: cache
+    spec:
+      containers:
+        - name: redis
+          image: us-docker.pkg.dev/google-samples/containers/gke/gb-redis-follower:v2
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+
+
