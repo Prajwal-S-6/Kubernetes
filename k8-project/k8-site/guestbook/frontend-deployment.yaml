@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-app
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: guestbook
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: guestbook
+        tier: frontend
+    spec:
+      containers:
+        - name: guestbook
+          image: us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5
+          ports:
+            - containerPort: 80
+          env:
+            - name: GET_HOSTS_FROM
+              value: "dns"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+
+
