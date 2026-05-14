@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-app
+  namespace: dev
   labels:
     app: guestbook
     tier: frontend
@@ -17,6 +18,7 @@ spec:
         app: guestbook
         tier: frontend
     spec:
+      serviceAccountName: frontend-sa
       containers:
         - name: guestbook
           image: us-docker.pkg.dev/google-samples/containers/gke/gb-frontend:v5
@@ -24,7 +26,10 @@ spec:
             - containerPort: 80
           env:
             - name: GET_HOSTS_FROM
-              value: "dns"
+              valueFrom:
+                configMapKeyRef:
+                  key: GET_HOSTS_FROM
+                  name: frontend-config
           resources:
             requests:
               cpu: 100m
